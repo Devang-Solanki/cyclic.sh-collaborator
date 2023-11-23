@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^3.0.0"
+    "node-fetch": "github:node-fetch/node-fetch#main"
   }
 }
