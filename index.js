@@ -8,10 +8,11 @@ const handleRequest = async (request) => {
     // Store request details
     const requestMethod = request.method;
     const requestUrl = request.url;
-    const requestHeaders = Array.from(request.headers).map(([key, value]) => `${key}: ${value}`);
+    const requestHeaders = Object.entries(request.headers).map(([key, value]) => `${key}: ${value}`);
 
-    // Remote IP (You need to replace this logic with the way you get the IP in Node.js)
-    const remoteIP = 'Not available';
+    // Get the client's IP address from x-forwarded-for
+    const xForwardedFor = request.headers['x-forwarded-for'];
+    const remoteIP = xForwardedFor ? xForwardedFor.split(',')[0] : 'Not available';
 
     // Format request details for Discord message
     const discordMessage = `
@@ -43,14 +44,3 @@ ${requestHeaders.join('\n')}
     return `Error occurred while sending request details to Discord! ${error}`;
   }
 };
-
-// Example usage (mocking a request object)
-const request = {
-  method: 'GET',
-  url: 'https://example.com',
-  headers: new Map([['Content-Type', 'application/json']]), // Example headers
-};
-
-handleRequest(request)
-  .then(console.log)
-  .catch(console.error);
