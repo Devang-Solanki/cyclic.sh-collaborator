@@ -9,7 +9,7 @@ const server = http.createServer(async (req, res) => {
     // Store request details
     const requestMethod = req.method;
     const requestUrl = req.url;
-    const requestHeaders = JSON.stringify(req.headers);
+    const requestHeaders = Object.entries(request.headers).map(([key, value]) => `${key}: ${value}`).join('\n');
 
     // Get the client's IP address from x-forwarded-for
     const xForwardedFor = req.headers['x-forwarded-for'];
