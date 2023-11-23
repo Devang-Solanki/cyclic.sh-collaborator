@@ -1,17 +1,18 @@
+import http from 'http';
 import fetch from 'node-fetch';
 
-const handleRequest = async (request) => {
+const server = http.createServer(async (req, res) => {
   // Discord webhook URL
   const discordWebhookURL = process.env.WEBHOOK; // Assuming you've set the environment variable
 
   try {
     // Store request details
-    const requestMethod = request.method;
-    const requestUrl = request.url;
-    const requestHeaders = Object.entries(request.headers).map(([key, value]) => `${key}: ${value}`);
+    const requestMethod = req.method;
+    const requestUrl = req.url;
+    const requestHeaders = JSON.stringify(req.headers);
 
     // Get the client's IP address from x-forwarded-for
-    const xForwardedFor = request.headers['x-forwarded-for'];
+    const xForwardedFor = req.headers['x-forwarded-for'];
     const remoteIP = xForwardedFor ? xForwardedFor.split(',')[0] : 'Not available';
 
     // Format request details for Discord message
@@ -24,7 +25,7 @@ const handleRequest = async (request) => {
 \`\`\`
 📎 **Headers** 📄
 \`\`\`
-${requestHeaders.join('\n')}
+${requestHeaders}
 \`\`\`
 `;
 
@@ -39,8 +40,15 @@ ${requestHeaders.join('\n')}
       }),
     });
 
-    return 'Request details sent to Discord webhook!';
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Request details sent to Discord webhook!');
   } catch (error) {
-    return `Error occurred while sending request details to Discord! ${error}`;
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end(`Error occurred while sending request details to Discord! ${error}`);
   }
-};
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
