@@ -17,7 +17,7 @@
 This project sets up a straightforward HTTP server using Node.js, redirecting all incoming requests to a Discord channel. It acts as an alternative to tools like Burp Suite Collaborator, channeling request specifics to a Discord webhook hosted on Cyclic.sh.
 
 #### ✨ Features
-- HTTP Server: Listens for incoming HTTPS requests.
+- HTTP Server: Listens for incoming HTTPS requests. (The current setup doesn't function with HTTP requests. If anyone knows how to address this issue, please create a ticket or issue for further discussion and resolution.)
 - Discord Webhook Integration: Sends request details (URL, method, headers, client's IP) to a Discord channel via a provided webhook URL.
 
 #### 🚀 How It Works
@@ -37,3 +37,5 @@ Once the server is up and running, it'll capture incoming HTTP requests and rela
 #### 🤝 Contribution Guidelines
 
 Contributions are welcome! Feel free to enhance this project by forking the repository, implementing improvements, and generating pull requests.
+
+<a href="https://www.buymeacoffee.com/devangsolankii" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174" /></a>
