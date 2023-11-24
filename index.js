@@ -17,10 +17,23 @@ const server = http.createServer(async (req, res) => {
 
     let requestBody = '';
 
-    // Function to send request details to Discord
+    // Capture request body for all request types except GET
+    if (requestMethod !== 'GET') {
+      let bodyChunks = [];
+      req.on('data', (chunk) => {
+        bodyChunks.push(chunk);
+      });
+      req.on('end', () => {
+        requestBody = Buffer.concat(bodyChunks).toString();
+        sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
+      });
+    } else {
+      sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
+    }
+
     const sendToDiscord = async (method, url, headers, ip, body) => {
       // Format request details for Discord message
-      const discordMessage = `
+      let discordMessage = `
 🚀 **Received Request Details** 🛰️
 \`\`\`plaintext
 📌 Method: ${method}
@@ -30,12 +43,17 @@ const server = http.createServer(async (req, res) => {
 📎 **Headers** 📄
 \`\`\`
 ${headers}
-\`\`\`
+\`\`\``;
+
+      // Include body section if request body exists
+      if (body.trim() !== '') {
+        discordMessage += `
 📦 **Body** 📦
 \`\`\`
 ${body}
 \`\`\`
-      `;
+`;
+      }
 
       // Send formatted message to Discord webhook
       await fetch(discordWebhookURL, {
@@ -51,22 +69,6 @@ ${body}
       res.writeHead(200, { 'Content-Type': 'text/plain' });
       res.end('Request details sent to Discord webhook!');
     };
-
-    // Capture request body for all request types except GET
-    if (requestMethod !== 'GET') {
-      let bodyChunks = [];
-      req.on('data', (chunk) => {
-        bodyChunks.push(chunk);
-      });
-      req.on('end', () => {
-        requestBody = Buffer.concat(bodyChunks).toString();
-        if (requestBody.trim() !== '') {
-          sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
-        }
-      });
-    } else {
-      sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
-    }
   } catch (error) {
     res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end(`Error occurred while sending request details to Discord! ${error}`);
