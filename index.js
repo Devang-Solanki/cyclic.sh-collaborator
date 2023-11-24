@@ -17,22 +17,7 @@ const server = http.createServer(async (req, res) => {
 
     let requestBody = '';
 
-    // Capture request body for all request types except GET
-    if (requestMethod !== 'GET') {
-      let bodyChunks = [];
-      req.on('data', (chunk) => {
-        bodyChunks.push(chunk);
-      });
-      req.on('end', () => {
-        requestBody = Buffer.concat(bodyChunks).toString();
-        if (requestBody.trim() !== '') {
-          sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
-        }
-      });
-    } else {
-      sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
-    }
-
+    // Function to send request details to Discord
     const sendToDiscord = async (method, url, headers, ip, body) => {
       // Format request details for Discord message
       const discordMessage = `
@@ -66,6 +51,22 @@ ${body}
       res.writeHead(200, { 'Content-Type': 'text/plain' });
       res.end('Request details sent to Discord webhook!');
     };
+
+    // Capture request body for all request types except GET
+    if (requestMethod !== 'GET') {
+      let bodyChunks = [];
+      req.on('data', (chunk) => {
+        bodyChunks.push(chunk);
+      });
+      req.on('end', () => {
+        requestBody = Buffer.concat(bodyChunks).toString();
+        if (requestBody.trim() !== '') {
+          sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
+        }
+      });
+    } else {
+      sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
+    }
   } catch (error) {
     res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end(`Error occurred while sending request details to Discord! ${error}`);
