@@ -24,7 +24,9 @@ const server = http.createServer(async (req, res) => {
     });
     req.on('end', () => {
       requestBody = Buffer.concat(bodyChunks).toString();
-      sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
+      if (requestBody.trim() !== '') {
+        sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
+      }
     });
 
     const sendToDiscord = async (method, url, headers, ip, body) => {
