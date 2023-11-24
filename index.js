@@ -15,33 +15,51 @@ const server = http.createServer(async (req, res) => {
     const xForwardedFor = req.headers['x-forwarded-for'];
     const remoteIP = xForwardedFor ? xForwardedFor.split(',')[0] : 'Not available';
 
-    // Format request details for Discord message
-    const discordMessage = `
+    let requestBody = '';
+
+    // Capture request body for all request types
+    let bodyChunks = [];
+    req.on('data', (chunk) => {
+      bodyChunks.push(chunk);
+    });
+    req.on('end', () => {
+      requestBody = Buffer.concat(bodyChunks).toString();
+      sendToDiscord(requestMethod, requestUrl, requestHeaders, remoteIP, requestBody);
+    });
+
+    const sendToDiscord = async (method, url, headers, ip, body) => {
+      // Format request details for Discord message
+      const discordMessage = `
 🚀 **Received Request Details** 🛰️
 \`\`\`plaintext
-📌 Method: ${requestMethod}
-🌐 URL: ${requestUrl}
-💻 Remote IP: ${remoteIP}
+📌 Method: ${method}
+🌐 URL: ${url}
+💻 Remote IP: ${ip}
 \`\`\`
 📎 **Headers** 📄
 \`\`\`
-${requestHeaders}
+${headers}
 \`\`\`
-`;
+📦 **Body** 📦
+\`\`\`
+${body}
+\`\`\`
+      `;
 
-    // Send formatted message to Discord webhook
-    await fetch(discordWebhookURL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        content: discordMessage,
-      }),
-    });
+      // Send formatted message to Discord webhook
+      await fetch(discordWebhookURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: discordMessage,
+        }),
+      });
 
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Request details sent to Discord webhook!');
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.end('Request details sent to Discord webhook!');
+    };
   } catch (error) {
     res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end(`Error occurred while sending request details to Discord! ${error}`);
