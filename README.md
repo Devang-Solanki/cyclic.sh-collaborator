@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://cyclic.sh/"><img src="https://docs.cyclic.sh/img/cyclic-logo.svg" alt="recon.cloud"></a>
+  <a href="https://cyclic.sh/"><img src="https://docs.cyclic.sh/img/cyclic-logo.svg" alt="cyclic.sh"></a>
   <br>
 </p>
 <p align="center">
@@ -13,8 +13,8 @@
   <br>
 </h1>
 
-
-This project sets up a straightforward HTTP server using Node.js, redirecting all incoming requests to a Discord channel. It is an alternative to tools like Burp Suite Collaborator, forwarding requests to a Discord channel using cyclic.sh.
+## Cyclops 
+Cyclos is a free alternative to Burp Suite Collaborator. It sets up a basic web server using Node.js. Any requests sent to this web server are forwarded to a Discord channel. Cyclos can be used to test for vulnerabilities like SSRF or blind XSS. Once set up, Cyclos will keep running to requests without needing any further configuration. The setup only needs to be done once.
 
 #### ✨ Features
 - HTTP Server: Listens for incoming HTTPS requests. (The current setup doesn't function with HTTP requests. If anyone knows how to address this issue, please create a ticket or issue for further discussion and resolution.)
