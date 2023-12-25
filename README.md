@@ -14,7 +14,7 @@
 </h1>
 
 
-This project sets up a straightforward HTTP server using Node.js, redirecting all incoming requests to a Discord channel. It acts as an alternative to tools like Burp Suite Collaborator, channeling request specifics to a Discord webhook hosted on Cyclic.sh.
+This project sets up a straightforward HTTP server using Node.js, redirecting all incoming requests to a Discord channel. It is an alternative to tools like Burp Suite Collaborator, forwarding requests to a Discord channel using cyclic.sh.
 
 #### ✨ Features
 - HTTP Server: Listens for incoming HTTPS requests. (The current setup doesn't function with HTTP requests. If anyone knows how to address this issue, please create a ticket or issue for further discussion and resolution.)
@@ -27,7 +27,7 @@ The code establishes an HTTP server that monitors incoming requests. When a requ
 #### ⚙️ Setup
 - Fork this Repository: Create a copy of this repository in your GitHub account.
 - Deploy New App: Use Cyclic.sh to deploy a new app and select the forked repository.
-- Set Environment Variables: Ensure you set the WEBHOOK environment variable with your Discord webhook URL in the Cyclic.sh Variables tab.
+- Set Environment Variables: Please make sure you set the WEBHOOK environment variable with your Discord webhook URL in the Cyclic.sh Variables tab.
 - Finalize Configuration: The setup should now be complete and operational.
 
 #### 📝 Usage
